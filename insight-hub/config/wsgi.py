@@ -1,5 +1,5 @@
 """
-WSGI config for insightHub project.
+WSGI config for insight-hub project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

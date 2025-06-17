@@ -1,10 +1,10 @@
-# insightHub
+# insight-hub
 
 ## project setup
 
 1- compelete cookiecutter workflow (recommendation: leave project_slug empty) and go inside the project
 ```
-cd insightHub
+cd insight-hub
 ```
 
 2- SetUp venv

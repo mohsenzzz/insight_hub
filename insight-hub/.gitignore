@@ -20,7 +20,6 @@ parts/
 sdist/
 var/
 wheels/
-
 pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
@@ -110,8 +109,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-
-
 
 # Spyder project settings
 .spyderproject

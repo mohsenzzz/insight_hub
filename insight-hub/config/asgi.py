@@ -1,5 +1,5 @@
 """
-ASGI config for insightHub project.
+ASGI config for insight-hub project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
