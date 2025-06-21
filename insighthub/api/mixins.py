@@ -5,7 +5,7 @@ from importlib import import_module
 from django.conf import settings
 
 from django.contrib import auth
-
+from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.authentication import BaseAuthentication
 
@@ -32,12 +32,18 @@ if TYPE_CHECKING:
 else:
     PermissionClassesType = Sequence[Type[BasePermission]]
 
+class IsOwner(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj == request.user or request.user.is_superuser
 
 class ApiAuthMixin:
     authentication_classes: Sequence[Type[BaseAuthentication]] = [
             JWTAuthentication,
     ]
-    permission_classes: PermissionClassesType = (IsAuthenticated, )
+    permission_classes: PermissionClassesType = (IsAuthenticated, IsOwner)
 
 class AdminPermission(BasePermission):
     def has_permission(self, request, view):
