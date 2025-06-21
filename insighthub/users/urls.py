@@ -1,8 +1,9 @@
 from django.urls import path
-from .apis import ProfileApi, RegisterApi
 
+from insighthub.users.apis.users.user_apis import UserListCreateApi
+
+app_name="users"
 
 urlpatterns = [
-    path('register/', RegisterApi.as_view(),name="register"),
-    path('profile/', ProfileApi.as_view(),name="profile"),
+    path('', UserListCreateApi.as_view(), name="user_list_create")
 ]
