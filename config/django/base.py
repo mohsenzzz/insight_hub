@@ -18,6 +18,7 @@ LOCAL_APPS = [
     'insighthub.common.apps.CommonConfig',
     'insighthub.users.apps.UsersConfig',
     'insighthub.authentication.apps.AuthenticationConfig',
+    'insighthub.tasks.apps.TasksConfig',
 ]
 
 THIRD_PARTY_APPS = [
@@ -136,6 +137,9 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
