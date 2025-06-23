@@ -19,6 +19,7 @@ LOCAL_APPS = [
     'insighthub.users.apps.UsersConfig',
     'insighthub.authentication.apps.AuthenticationConfig',
     'insighthub.tasks.apps.TasksConfig',
+    'insighthub.schedule.apps.ScheduleConfig',
 ]
 
 THIRD_PARTY_APPS = [
