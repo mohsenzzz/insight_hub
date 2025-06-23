@@ -43,7 +43,7 @@ class ApiAuthMixin:
     authentication_classes: Sequence[Type[BaseAuthentication]] = [
             JWTAuthentication,
     ]
-    permission_classes: PermissionClassesType = (IsAuthenticated, IsOwner)
+    permission_classes: PermissionClassesType = (IsAuthenticated,)
 
 class AdminPermission(BasePermission):
     def has_permission(self, request, view):
