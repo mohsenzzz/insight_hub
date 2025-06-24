@@ -6,8 +6,7 @@ from rest_framework import status
 
 from insighthub.api.mixins import ApiAuthMixin
 from insighthub.api.pagination import get_paginated_response_context, LimitOffsetPagination
-from insighthub.schedule.apis.schedules.serializers.serialziers import ScheduleListCreateSerializer, \
-    ScheduleCreateSerializer, ScheduleOutputSerializer
+from insighthub.schedule.apis.schedules.serializers.serialziers import ScheduleCreateSerializer, ScheduleOutputSerializer
 from insighthub.schedule.apis.schedules.serializers.swagger_serializers import ScheduleSwaggerOutPutSerializer, \
     ScheduleListSwaggerSerializer
 from insighthub.schedule.constants import SCHEDULE_TAGS
@@ -15,6 +14,7 @@ from insighthub.schedule.interfaces.schedule_interface import ScheduleInterface
 from insighthub.schedule.selectors.schedule_selectors import get_User_schedules
 from insighthub.schedule.services.celery_services import create_periodic_task
 from insighthub.schedule.services.schedule_services import create_schedule
+
 
 
 class ScheduleListCreateApi(ApiAuthMixin,APIView):
@@ -25,7 +25,7 @@ class ScheduleListCreateApi(ApiAuthMixin,APIView):
 
         return get_paginated_response_context(
             pagination_class=LimitOffsetPagination,
-            serializer_class=ScheduleListCreateSerializer,
+            serializer_class=ScheduleOutputSerializer,
             queryset=schedules,
             request=request,
             view=self
@@ -33,6 +33,7 @@ class ScheduleListCreateApi(ApiAuthMixin,APIView):
 
     @extend_schema(tags=SCHEDULE_TAGS,request=ScheduleCreateSerializer, responses=ScheduleSwaggerOutPutSerializer)
     def post(self,request):
+
         serializer=ScheduleCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -47,8 +48,8 @@ class ScheduleListCreateApi(ApiAuthMixin,APIView):
                                    )
         #
         #
-        create_periodic_task(schedule.cron_expression,
-                             schedule.task.name,
-                             schedule.enabled,
-                             schedule.arguments)
+
+        create_periodic_task(schedule= schedule)
+
+
         return Response(ScheduleOutputSerializer(instance=schedule).data, status=status.HTTP_201_CREATED)

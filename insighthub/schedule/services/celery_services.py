@@ -1,8 +1,10 @@
 import json
 import uuid
-
+from django.db import transaction
+from rest_framework.exceptions import ValidationError
 from django_celery_beat.models import PeriodicTask,CrontabSchedule
 
+from insighthub.schedule.models import Schedule
 from insighthub.tasks.models import TaskInput
 
 
@@ -21,14 +23,20 @@ def create_celery_task_schedule( cron_expression:str)->CrontabSchedule:
 
 
 
-def create_periodic_task(cron_expression:str, task_name:str,enable:bool, args:dict):
-    schedule= create_celery_task_schedule(cron_expression)
+def create_periodic_task(schedule:Schedule):
+    crontab_schedule= create_celery_task_schedule(schedule.cron_expression)
+    try:
+        with transaction.atomic():
+            periodic_task = PeriodicTask.objects.create(
+                crontab=crontab_schedule,
+                name=schedule.task.name+"_"+str(uuid.uuid4()),
+                task=f'insighthub.tasks.tasks.{schedule.task.name}',
+                args=json.dumps(list(schedule.arguments.values())),
+                one_off=False,
+                enabled=schedule.enabled,
+            )
+            schedule.periodic_task = periodic_task
+            schedule.save()
 
-    PeriodicTask.objects.create(
-        crontab=schedule,
-        name=task_name+"_"+str(uuid.uuid4()),
-        task=f'tasks.tasks.{task_name}',
-        args=args,
-        one_off=False,
-        enabled=enable,
-    )
+    except Exception as e:
+        raise ValidationError(f"can not create periodic task")
