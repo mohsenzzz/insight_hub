@@ -13,7 +13,9 @@ def get_user_report(file_name: str):
     users = get_all_users()
     users_data = list(users.values("first_name","last_name","username","email"))
     df = pd.DataFrame(users_data)
-    file_name = file_name + str(datetime.now())
+    name, ext = os.path.splitext(file_name)
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_name = f"{name}_{timestamp}{ext}"
     file_path= os.path.join(MEDIA_ROOT, 'reports', file_name)
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     df.to_excel(file_path)

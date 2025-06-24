@@ -27,8 +27,7 @@ class TaskInput(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="task_inputs")
     name=models.CharField(max_length=255)
     type = models.CharField(max_length=100, choices=TYPE_CHOICE)
-    value = models.CharField(max_length=255, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
 
 
     def __str__(self):
