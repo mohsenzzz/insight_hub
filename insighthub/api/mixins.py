@@ -34,16 +34,22 @@ else:
 
 class IsOwner(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
+        # if request.method in permissions.SAFE_METHODS:
+        #     return True
 
-        return obj == request.user or request.user.is_superuser
+        return obj.user == request.user or request.user.is_superuser
+
+class ApiAuthOwnerMixin:
+    authentication_classes: Sequence[Type[BaseAuthentication]] = [
+        JWTAuthentication,
+    ]
+    permission_classes: PermissionClassesType = (IsAuthenticated,IsOwner)
 
 class ApiAuthMixin:
     authentication_classes: Sequence[Type[BaseAuthentication]] = [
             JWTAuthentication,
     ]
-    permission_classes: PermissionClassesType = (IsAuthenticated,IsOwner)
+    permission_classes: PermissionClassesType = (IsAuthenticated,)
 
 class AdminPermission(BasePermission):
     def has_permission(self, request, view):
