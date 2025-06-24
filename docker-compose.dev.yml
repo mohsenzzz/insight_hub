@@ -14,15 +14,15 @@ services:
     volumes:
       - ./volumes/postgres-data:/var/lib/postgresql/data/
 
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
+#  web:
+#    build: .
+#    command: python manage.py runserver 0.0.0.0:8000
+#    volumes:
+#      - .:/app
+#    ports:
+#      - "8000:8000"
+#    depends_on:
+#      - db
 
 
   rabbitmq:
@@ -47,21 +47,7 @@ services:
     volumes:
       - redis-data:/data
 
-  celery:
-    build: .
-    command: celery -A config worker --loglevel=info
-    volumes:
-        - .:/app
-    depends_on:
-        - rabbitmq
 
-  celery-beat:
-    build: .
-    command: celery -A config beat --loglevel=info -S django
-    volumes:
-        - .:/app
-    depends_on:
-        - rabbitmq
 volumes:
     postgres-data:
     redis-data:
