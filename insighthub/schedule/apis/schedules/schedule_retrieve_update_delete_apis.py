@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 
-from insighthub.api.mixins import ApiAuthMixin
+from insighthub.api.mixins import ApiAuthMixin, ApiAuthOwnerMixin
 from insighthub.schedule.apis.schedules.serializers.serialziers import ScheduleOutputSerializer, \
     SchedulePatchSerializer
 from insighthub.schedule.apis.schedules.serializers.swagger_serializers import ScheduleSwaggerOutPutSerializer
@@ -13,17 +13,19 @@ from insighthub.schedule.selectors.schedule_selectors import get_schedule_by_id
 from insighthub.schedule.services.schedule_services import partial_update_schedule, delete_schedule
 
 
-class ScheduleRetrieveUpdateDestroy(ApiAuthMixin,APIView):
+class ScheduleRetrieveUpdateDestroy(ApiAuthOwnerMixin,APIView):
     @extend_schema(tags=SCHEDULE_TAGS, responses= ScheduleSwaggerOutPutSerializer)
     def get(self, request, schedule_id):
         schedule = get_schedule_by_id(schedule_id=schedule_id)
-
+        self.check_object_permissions(request, schedule)
         return Response(ScheduleOutputSerializer(instance=schedule).data, status=status.HTTP_200_OK)
 
     @extend_schema(tags=SCHEDULE_TAGS,request=SchedulePatchSerializer, responses=ScheduleSwaggerOutPutSerializer)
     def patch(self, request, schedule_id):
 
         schedule = get_schedule_by_id(schedule_id=schedule_id)
+
+        self.check_object_permissions(request, schedule)
         serializer = SchedulePatchSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         schedule_interface =  SchedulePatchInterface(
@@ -38,6 +40,7 @@ class ScheduleRetrieveUpdateDestroy(ApiAuthMixin,APIView):
     @extend_schema(tags=SCHEDULE_TAGS,  responses={204: "accepted"})
     def delete(self,request, schedule_id):
         schedule= get_schedule_by_id(schedule_id=schedule_id)
+        self.check_object_permissions(request, schedule)
         delete_schedule(schedule)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
