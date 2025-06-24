@@ -2,39 +2,50 @@
 
 ## project setup
 
-1- compelete cookiecutter workflow (recommendation: leave project_slug empty) and go inside the project
+1- install dependencies
 ```
-cd InsightHub
+pip install requirements.txt
 ```
-
-2- SetUp venv
-```
-virtualenv -p python3.10 venv
-source venv/bin/activate
-```
-
-3- install Dependencies
-```
-pip install -r requirements_dev.txt
-pip install -r requirements.txt
-```
-
-4- create your env
+2- create your env
 ```
 cp .env.example .env
 ```
 
-5- Create tables
+3- run dependencies on docker 
+```
+sudo docker compose -f docker-compose.dev.yml up -d
+```
+
+4- Create tables
 ```
 python manage.py migrate
 ```
-
-6- spin off docker compose
+5- initial project
 ```
-docker compose -f docker-compose.dev.yml up -d
+python manage.py taskinit
 ```
-
-7- run the project
+6- create superuser
+```
+python manage.py createsuperuser
+```
+7- run server
 ```
 python manage.py runserver
 ```
+8- run celery
+```
+ celery -A config worker --loglevel=info
+
+```
+9- run celery beat
+```
+ celery -A config beat --loglevel=info -S django
+
+```
+
+
+
+
+
+
+

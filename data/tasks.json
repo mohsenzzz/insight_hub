@@ -1,0 +1,2 @@
+
+{"task1":{"name":"get_user_report","description":"get user registered","task_input":{"name":"filename","type":"string"}},"task2":{"name":"get_usd_value","description":"get usd price"}}
