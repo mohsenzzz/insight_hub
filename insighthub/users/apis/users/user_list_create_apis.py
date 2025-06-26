@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from insighthub.api.mixins import ApiAuthAdmin
-from insighthub.api.pagination import get_paginated_response_context, LimitOffsetPagination
+from insighthub.api.pagination import get_paginated_response_context
+from insighthub.api.serializer import PaginationFilterSerializer
 from insighthub.users.apis.users.serializers.serializers import UserListCreateSerializer, UserOutputSerializer
 from insighthub.users.apis.users.serializers.swagger_serializers import UserListSwaggerSerializer, \
     UserSwaggerOutPutSerializer
@@ -14,18 +15,19 @@ from insighthub.users.interfaces.user_interface import UserInterface
 from insighthub.users.models import User
 from insighthub.users.selectors.user_selectors import get_all_users
 from insighthub.users.services.user_services import create_user
+from insighthub.utils.pagination import CustomPaginationPagination
 
 
 class UserListCreateApi(ApiAuthAdmin, APIView):
 
     queryset = User.objects.all()
 
-    @extend_schema(tags=USER_TAGS, responses=UserListSwaggerSerializer)
+    @extend_schema(tags=USER_TAGS, responses=UserListSwaggerSerializer, parameters=[PaginationFilterSerializer])
     def get(self, request):
         users = get_all_users()
 
         return get_paginated_response_context(
-            pagination_class=LimitOffsetPagination,
+            pagination_class=CustomPaginationPagination,
             serializer_class= UserListCreateSerializer,
             queryset=users,
             request= request,

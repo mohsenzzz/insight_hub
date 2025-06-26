@@ -15,3 +15,8 @@ class AbstractListOutputSwaggerSerializer(serializers.Serializer):
     page_size = serializers.IntegerField(help_text="Number of items per page.")
     results = serializers.ListField(child=serializers.DictField(), help_text="List of objects.")
     page = serializers.IntegerField(required=False, help_text='number of page')
+
+
+class PaginationFilterSerializer(serializers.Serializer):
+    page = serializers.IntegerField(required=False)
+    page_size= serializers.IntegerField(required=False)

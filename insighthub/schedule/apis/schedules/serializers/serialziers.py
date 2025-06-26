@@ -57,3 +57,4 @@ class ScheduleOutputSerializer(serializers.ModelSerializer):
         model=Schedule
         fields=("id","cron_expression", "enabled","task_id", "arguments")
 
+
