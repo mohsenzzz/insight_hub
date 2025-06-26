@@ -35,6 +35,11 @@ class LimitOffsetPagination(_LimitOffsetPagination):
     default_limit = 10
     max_limit = 50
 
+    def get_page_size(self, request):
+        if request.user.is_authenticated and request.user.is_superuser:
+            return 100  # For admin users
+        return 10
+
     def get_paginated_data(self, data):
         return OrderedDict([
             ('limit', self.limit),

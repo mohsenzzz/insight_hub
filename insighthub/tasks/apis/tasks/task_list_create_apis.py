@@ -5,7 +5,8 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import status
 
 from insighthub.api.mixins import ApiAuthMixin
-from insighthub.api.pagination import get_paginated_response_context, LimitOffsetPagination
+from insighthub.api.pagination import get_paginated_response_context
+from insighthub.api.serializer import PaginationFilterSerializer
 from insighthub.tasks.apis.tasks.serializers.serializers import TaskListCreateOutPutSerializer, \
     TaskListCreateInputSerializer
 from insighthub.tasks.apis.tasks.serializers.swagger_serializers import TaskListSwaggerSerializer, \
@@ -14,16 +15,17 @@ from insighthub.tasks.constants import TASK_TAGS
 from insighthub.tasks.interfaces.task_interface import TaskCreatePutInterface, TaskInputInterface
 from insighthub.tasks.selectors.task_selectors import get_unschedule_tasks
 from insighthub.tasks.services.task_services import create_task
+from insighthub.utils.pagination import CustomPaginationPagination
 
 
 class TaskListCreateApi(ApiAuthMixin, APIView):
 
-    @extend_schema(tags=TASK_TAGS, responses=TaskListSwaggerSerializer)
+    @extend_schema(tags=TASK_TAGS, responses=TaskListSwaggerSerializer,parameters=[PaginationFilterSerializer])
     def get(self, request):
         tasks = get_unschedule_tasks()
 
         return get_paginated_response_context(
-            pagination_class=LimitOffsetPagination,
+            pagination_class=CustomPaginationPagination,
             serializer_class=TaskListCreateOutPutSerializer,
             queryset=tasks,
             request=request,
