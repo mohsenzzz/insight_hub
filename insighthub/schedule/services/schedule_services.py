@@ -59,6 +59,8 @@ def partial_update_schedule(schedule_interface:SchedulePatchInterface, schedule:
 def delete_schedule(schedule:Schedule):
 
     try:
-        schedule.delete()
+        with transaction.atomic():
+            schedule.periodic_task.delete()
+            schedule.delete()
     except Exception as e:
         raise ValidationError(f"can not delete schedule: {e}")

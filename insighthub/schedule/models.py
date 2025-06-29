@@ -18,3 +18,7 @@ class Schedule(BaseModel):
     arguments= models.JSONField(null=True, blank=True)
 
 
+    # def delete(self,*args, **kwargs):
+    #     if self.periodic_task:
+    #         self.periodic_task.delete()
+    #     super().delete(*args, **kwargs)

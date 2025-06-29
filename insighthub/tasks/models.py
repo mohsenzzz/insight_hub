@@ -10,10 +10,10 @@ from insighthub.users.models import User
 
 # Create your models here.
 class Task(BaseModel):
-    name= models.CharField(max_length=255)
+    name= models.CharField(max_length=255,unique=True)
     description= models.TextField(null=True,blank=True)
 
-    # schedule = models.ForeignKey(Schedule, on_delete=models.SET_NULL, related_name='tasks',null=True,blank=True)
+
 
 
 class TaskInput(models.Model):

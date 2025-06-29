@@ -21,3 +21,9 @@ def get_task_by_id(task_id:int)->Task:
         return Task.objects.get(id=task_id)
     except Exception as e:
         raise ValidationError(f"task by id {task_id} not found.")
+
+def get_task_by_name(task_name:str)->Task:
+    try:
+        return Task.objects.get(name=task_name)
+    except Exception as e:
+        raise ValidationError(f"task by id {task_name} not found.")

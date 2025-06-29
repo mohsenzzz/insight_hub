@@ -34,3 +34,5 @@ class TaskListCreateOutPutSerializer(serializers.ModelSerializer):
         task_input = obj.task_inputs.all()
         return TaskInputSerializer(instance=task_input, many=True).data
 
+class InputTaskSerializer(serializers.Serializer):
+    taskInput= serializers.JSONField(required=False)

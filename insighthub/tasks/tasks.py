@@ -10,7 +10,7 @@ from config.django.base import MEDIA_ROOT
 from insighthub.users.selectors.user_selectors import get_all_users
 
 
-@shared_task
+@shared_task(name="get_user_report")
 def get_user_report(file_name: str):
     users = get_all_users()
     users_data = list(users.values("first_name","last_name","username","email"))
@@ -24,14 +24,17 @@ def get_user_report(file_name: str):
     return file_path
 
 
-@shared_task
+@shared_task(name="get_usd_value")
 def get_usd_value():
     url = env("USD_URL")
     response = requests.get(url, timeout=10)
-    print(response)
+    response=response.json()
     data = [value for key, value in response.items()]
     df = pd.DataFrame(data)
     file_name = "usd.xlsx"
+    name, ext = os.path.splitext(file_name)
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_name = f"{name}_{timestamp}{ext}"
     file_path = os.path.join(MEDIA_ROOT, 'usd', file_name)
     if os.path.exists(file_path):
         existing_data = pd.read_excel(file_path)
